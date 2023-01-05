@@ -14,10 +14,12 @@ For more info, see also the testingMC.ipynb notebook, were different tests were 
 Diego Ontiveros Cruz -- 10/1/2023
 """
 
+import numba
 import numpy as np
 import matplotlib.pyplot as plt
 
 from itertools import combinations
+from copy import copy
 from time import time
 to = time()
 
@@ -212,6 +214,7 @@ class System():
 
 
     def get_labels(self):
+        
 
         self.labels = []
         for pair in self.pairs:
@@ -224,7 +227,7 @@ class System():
         for pair in self.pairs:
             distance = np.linalg.norm(pair[0].coord - pair[1].coord)
             self.distances.append(distance)
-        return self.distances
+        return np.array(self.distances)
 
     def get_energies(self):
 
@@ -261,9 +264,9 @@ ax3 = fig.add_subplot(2, 2, 2, projection='3d')
 
 
 # Sampling parameters
-N_He = 10                # Number of He atoms 
-N_sampling = 1000     # Number of iterations
-lim = 7                 # Box limit
+N_He = 4                # Number of He atoms 
+N_sampling = 10000      # Number of iterations (minimum 10)
+lim = 8                 # Box limit
 T = 10.                 # Temperature
 kb = 0.00119872041      # Boltzman constant (in kcal/(mol⋅K))
 beta = 1./(kb*T)        # Beta factor
@@ -303,9 +306,10 @@ for i in range(N_sampling):
     # print(system.total_energy)
     energies[i] = system.total_energy
 
+    for atom in atoms: frames[i].append(copy(atom))
     for atom in atoms[1:]: atom.toOrigin()
-    for atom in atoms: frames[i].append(atom.copy())
-    if i%(int(N_sampling/10)) == 0:
+
+    if i%(N_sampling/10) == 0:
         print(f"{int(100*i/N_sampling)}% ",sep=" ",end="",flush=True)
 
 
@@ -321,13 +325,19 @@ print("\nMinimum Energies from sampling (cm-1): ", minE)
 # Min Configuration Visualization
 
 
+
+
 # Plot Settings
+tick_step = 4
 for ax in [ax1,ax3]:
     ax.quiver(-lim,0,0, 2*lim,0,0, color='k', lw=1, arrow_length_ratio=0.05)   # x-axis
     ax.quiver(0,-lim,0, 0,2*lim,0, color='k', lw=1, arrow_length_ratio=0.05)   # y-axis
     ax.quiver(0,0,-lim, 0,0,2*lim, color='k', lw=1, arrow_length_ratio=0.05)   # z-axis
     ax.set_xlim(-lim,lim);ax.set_ylim(-lim,lim);ax.set_zlim(-lim,lim)        # Box limits
     ax.set_xlabel("x");ax.set_ylabel("y");ax.set_zlabel("z")                 # Axis Labels
+    ax.set_xticks(np.arange(-lim, lim+tick_step, tick_step))
+    ax.set_yticks(np.arange(-lim, lim+tick_step, tick_step))
+    ax.set_zticks(np.arange(-lim, lim+tick_step, tick_step))
 ax1.set_title("Minimum configuration from initial sampling")
 ax3.set_title("Minimum configuration from metropolis simulation")
 fig.tight_layout(h_pad=3,w_pad=5)
