@@ -154,6 +154,8 @@ def potential(atom1,atom2,R):
     return V
 
 
+#################### System and atoms classes ###############
+
 class Li():
     """ Li particle class. """
     def __init__(self) -> None:
@@ -199,7 +201,7 @@ class System():
 
         Parameters
         ----------
-        `pairs` : List of pairs of particles objects
+        `pairs` : List of pairs of particle objects.
         `N` : Number of particles
         """
 
@@ -214,7 +216,7 @@ class System():
 
 
     def get_labels(self):
-        
+        """Gets the atom labels for each pair. Returns list."""
 
         self.labels = []
         for pair in self.pairs:
@@ -222,6 +224,7 @@ class System():
         return self.labels
 
     def get_distances(self):
+        """Gets the distances between atoms of each pair. Returns array."""
 
         self.distances = []
         for pair in self.pairs:
@@ -230,6 +233,7 @@ class System():
         return np.array(self.distances)
 
     def get_energies(self):
+        """Gets the energies between atoms of each pair. Returns array."""
 
         self.energies = []
         for i,pair in enumerate(self.pairs):
@@ -240,10 +244,13 @@ class System():
         return np.array(self.energies)
 
     def get_total_energy(self):
+        """Computes total energy of the system by the sum of energies of each pair."""
+
         self.total_energy = np.sum(self.energies)
         return self.total_energy
 
     def update(self):
+        """Updates all attributes of the System."""
 
         self.labels = self.get_labels()
         self.distances = self.get_distances()
@@ -314,16 +321,16 @@ for i in range(N_sampling):
 
 
 # Get minimum Energy and Coordinates from the initial sampling 
-minE = np.min(energies)                # Mininum energy from sampling pairs
-minEi = np.argmin(energies)            # Minimum energy index
-minFrame = frames[minEi]
-for atom in minFrame: atom.draw(ax1)
+minE = np.min(energies)                 # Mininum energy from sampling pairs
+minEi = np.argmin(energies)             # Minimum energy index
+minFrame = frames[minEi]                # Frame of the minimum energy 
+for atom in minFrame: atom.draw(ax1)    # Drawing initial sample minimum
 
 print("\nMinimum Energies from sampling (cm-1): ", minE)
 
 
-# Min Configuration Visualization
-
+######################## ----- Initial MC Sampling ----- ######################### 
+# To Do
 
 
 
