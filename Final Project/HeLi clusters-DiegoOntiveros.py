@@ -289,7 +289,7 @@ ax3 = fig.add_subplot(2, 2, 2, projection='3d')
 
 # Sampling parameters
 N_He = 4                # Number of He atoms 
-N_sampling = 100      # Number of iterations (minimum 10)
+N_sampling = 10000      # Number of iterations (minimum 10)
 lim = 8                 # Box limit
 T = 10.                 # Temperature
 kb = 0.00119872041      # Boltzman constant (in kcal/(mol⋅K))
