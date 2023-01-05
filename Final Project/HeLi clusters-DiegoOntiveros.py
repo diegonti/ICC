@@ -23,7 +23,7 @@ from copy import copy
 from time import time
 to = time()
 
-
+#################### General external functions ##################
 
 def acceptE(dE):
     """
@@ -54,6 +54,24 @@ def print_title(text,before=15,after=15,separator="-",head=2,tail=1):
     """Prints text in a title-style."""
     separator = str(separator)
     print("\n"*head,separator*before,text,separator*after,"\n"*tail)
+
+def writeXYZ(atoms:list,file_name:str="MCout.xyz"):
+    """
+    Writes the coords array into a .xyz-style file.
+
+    Parameters
+    ----------
+    `atoms` : List of particle objects.
+    `file_name` : Output file name (.xyz). Defaults to "MCout.xyz"
+    """
+    N = len(atoms)
+    with open(file_name,"w") as outFile: 
+        outFile.write(str(N) + "\n\n")
+        for atom in atoms:
+            label = atom.label
+            x,y,z = atom.coord
+            outFile.write(f"{label:5} {x:>20.15f} {y:>20.15f} {z:>20.15f} \n")
+            
 
 ###################### He-He and He-Li Potentials ############### 
 
@@ -195,18 +213,17 @@ class He():
         ax.scatter(x,y,z, s=100, c="darkorchid", alpha=0.75, edgecolors="k")
 
 class System():
-    def __init__(self, pairs:list,N:int) -> None:
+    def __init__(self, atoms:list) -> None:
         """
         Contains information of the systsem in pair-whise manner.
 
         Parameters
         ----------
-        `pairs` : List of pairs of particle objects.
-        `N` : Number of particles
+        `atoms` : List of atoms of particle objects.
         """
-
-        self.pairs = pairs      # List of pairs of particles objects
-        self.N = N              # Number of particles
+        self.atoms = atoms
+        self.pairs = list(combinations(atoms,2))    # List of pairs of particles objects
+        self.N = len(self.pairs)                    # Number of particles
 
 
         self.labels = self.get_labels()
@@ -272,19 +289,19 @@ ax3 = fig.add_subplot(2, 2, 2, projection='3d')
 
 # Sampling parameters
 N_He = 4                # Number of He atoms 
-N_sampling = 10000      # Number of iterations (minimum 10)
+N_sampling = 100      # Number of iterations (minimum 10)
 lim = 8                 # Box limit
 T = 10.                 # Temperature
 kb = 0.00119872041      # Boltzman constant (in kcal/(mol⋅K))
 beta = 1./(kb*T)        # Beta factor
+np.random.seed(333)
 
 # Creating list with the atom objects of the system
 atoms = [Li()]
 for i in range(N_He): atoms.append(He(i+1))
 
 # Creating System of atoms pairs
-pairs = list(combinations(atoms,2))
-system = System(pairs,N_He+1)
+system = System(atoms)
 
 
 
@@ -300,17 +317,13 @@ print_title("Starting initial sampling")
 print("Completed:", end=" ")
 frames = [[] for _ in range(N_sampling)]
 energies = np.zeros(N_sampling) 
-for i in range(N_sampling):
+for i in range(N_sampling):                             ########### Use system.atoms ??
 
     for atom in atoms[1:]:
         randT = np.random.uniform(-lim,lim,size=3)
         atom.translate(*randT)
     
     system.update()
-    # print(system.labels)
-    # print(system.distances)
-    # print(system.energies)
-    # print(system.total_energy)
     energies[i] = system.total_energy
 
     for atom in atoms: frames[i].append(copy(atom))
@@ -319,13 +332,18 @@ for i in range(N_sampling):
     if i%(N_sampling/10) == 0:
         print(f"{int(100*i/N_sampling)}% ",sep=" ",end="",flush=True)
 
+    # print(system.labels)
+    # print(system.distances)
+    # print(system.energies)
+    # print(system.total_energy)
+
 
 # Get minimum Energy and Coordinates from the initial sampling 
 minE = np.min(energies)                 # Mininum energy from sampling pairs
 minEi = np.argmin(energies)             # Minimum energy index
 minFrame = frames[minEi]                # Frame of the minimum energy 
 for atom in minFrame: atom.draw(ax1)    # Drawing initial sample minimum
-
+writeXYZ(minFrame,file_name="sampling.xyz")
 print("\nMinimum Energies from sampling (cm-1): ", minE)
 
 
@@ -352,6 +370,6 @@ fig.tight_layout(h_pad=3,w_pad=5)
 
 tf = time()
 print(f"\nProcess finished in {tf-to:.2f}s")
-plt.show()
+# plt.show()
 
 
