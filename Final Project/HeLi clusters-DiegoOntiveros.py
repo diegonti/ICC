@@ -14,9 +14,10 @@ For more info, see also the testingMC.ipynb notebook, were different tests were 
 Diego Ontiveros Cruz -- 10/1/2023
 """
 
-import numba
+import scipy as sp
 import numpy as np
 import matplotlib.pyplot as plt
+
 
 from itertools import combinations
 from copy import copy
@@ -25,21 +26,19 @@ to = time()
 
 #################### General external functions ##################
 
-def acceptE(dE):
+def acceptE(dE,beta):
     """
     Accepts or regects a Monte Carlo step.
 
     Parameters
     ----------
-    `delta_e` : difference in energy from one step to another
-
-    `kT` : factor to consider 
+    `delta_e` : Difference in energy from one step to another.
+    `beta` : Temperature factor to consider.
 
     Returns
     ----------
-    `True` : if step is accepted 
-    
-    `False` : if step is not accepted       
+    `True` : if step is accepted. 
+    `False` : if step is not accepted.      
     """
     if dE < 0: 
         return True
@@ -76,7 +75,7 @@ def writeXYZ(atoms:list,file_name:str="MCout.xyz"):
 ###################### He-He and He-Li Potentials ############### 
 
 def fnHeLi(R,n,b):
-    suma = np.sum([(b*R)**k /np.math.factorial(k) for k in range(n)],axis=0)
+    suma = np.sum([(b*R)**k /np.math.factorial(k) for k in range(n+1)],axis=0)
     # k = np.arange(n+1)
     # suma = np.sum( (b*R)**k/sp.special.factorial(k) ) # broadcastin!
     return 1 - np.exp(-b*R) * suma
@@ -121,7 +120,6 @@ def HeLiPotential(R):
     cm = 219474.63
     return V*cm
 
-
 def HeHePotential(R):
     """
     Computes the LM2M2 He-He potential.
@@ -160,7 +158,6 @@ def HeHePotential(R):
     K = 315777
     return V*cm/K
 
-
 def potential(atom1,atom2,R):
     HeLi = isinstance(atom1,He) and isinstance(atom2,Li)
     LiHe = isinstance(atom1,Li) and isinstance(atom2,He)
@@ -172,7 +169,8 @@ def potential(atom1,atom2,R):
     return V
 
 
-#################### System and atoms classes ###############
+
+#################### System and Atoms classes ###############
 
 class Li():
     """ Li particle class. """
@@ -224,13 +222,20 @@ class System():
         self.atoms = atoms
         self.pairs = list(combinations(atoms,2))    # List of pairs of particles objects
         self.N = len(self.pairs)                    # Number of particles
+        self.coords = self.get_coords()
 
-
+        # Pairs information
         self.labels = self.get_labels()
         self.distances = self.get_distances()
         self.energies = self.get_energies()
         self.total_energy = self.get_total_energy()
 
+    def get_coords(self): # ####Remove if not used by distances!
+        """Gets the coordinates of all atoms in the system."""
+        self.coords = []
+        for atom in self.atoms:
+            self.coords.append(atom.coord)
+        return np.array(self.coords)
 
     def get_labels(self):
         """Gets the atom labels for each pair. Returns list."""
@@ -240,13 +245,15 @@ class System():
             self.labels.append((pair[0].label+str(pair[0].index),pair[1].label+str(pair[1].index)))
         return self.labels
 
-    def get_distances(self):
+    def get_distances(self):                                                          
         """Gets the distances between atoms of each pair. Returns array."""
 
         self.distances = []
         for pair in self.pairs:
             distance = np.linalg.norm(pair[0].coord - pair[1].coord)
             self.distances.append(distance)
+
+        # self.distances = sp.spatial.distance.pdist(self.coords) # (same pair-whise order)
         return np.array(self.distances)
 
     def get_energies(self):
@@ -268,12 +275,13 @@ class System():
 
     def update(self):
         """Updates all attributes of the System."""
-
+        self.coords = self.get_coords()
         self.labels = self.get_labels()
         self.distances = self.get_distances()
         self.energies = self.get_energies()
         self.total_energy = self.get_total_energy()
-        
+    
+    # could be a     system.draw(ax) method for atom in self.atoms: atom.draw(ax)
 
 
 
@@ -288,13 +296,16 @@ ax3 = fig.add_subplot(2, 2, 2, projection='3d')
 
 
 # Sampling parameters
-N_He = 4                # Number of He atoms 
-N_sampling = 10000      # Number of iterations (minimum 10)
+N_He = 8                # Number of He atoms 
+N_sampling = 10000     # Number of iterations (minimum 10)
 lim = 8                 # Box limit
 T = 10.                 # Temperature
 kb = 0.00119872041      # Boltzman constant (in kcal/(mol⋅K))
 beta = 1./(kb*T)        # Beta factor
 np.random.seed(333)
+print(f"\nSystem: He{N_He}Li+")
+print("Number of initial sampling steps: ", N_sampling)
+print("Temperature: ", T)
 
 # Creating list with the atom objects of the system
 atoms = [Li()]
@@ -313,21 +324,22 @@ Initial sampling of the box to get a startig point for metropolis.
 While the Li+ is fixed in the center, snapshots of the He atoms at random places 
 are generated and the energy is saved.
 """
+
 print_title("Starting initial sampling")
 print("Completed:", end=" ")
 frames = [[] for _ in range(N_sampling)]
 energies = np.zeros(N_sampling) 
 for i in range(N_sampling):                             ########### Use system.atoms ??
 
-    for atom in atoms[1:]:
+    for atom in system.atoms[1:]:
         randT = np.random.uniform(-lim,lim,size=3)
         atom.translate(*randT)
     
     system.update()
     energies[i] = system.total_energy
 
-    for atom in atoms: frames[i].append(copy(atom))
-    for atom in atoms[1:]: atom.toOrigin()
+    for atom in system.atoms: frames[i].append(copy(atom))          # frames[i].append(copy(system))
+    for atom in system.atoms[1:]: atom.toOrigin()
 
     if i%(N_sampling/10) == 0:
         print(f"{int(100*i/N_sampling)}% ",sep=" ",end="",flush=True)
@@ -347,8 +359,37 @@ writeXYZ(minFrame,file_name="sampling.xyz")
 print("\nMinimum Energies from sampling (cm-1): ", minE)
 
 
-######################## ----- Initial MC Sampling ----- ######################### 
-# To Do
+######################## ----- Metropolis MC ----- #########################   
+
+"""
+Metropolis Monte Carlo to find the minimum configuration from the initial starting point
+found in the sampling. Now the He atoms move a smaller given random step,
+and new configurations are gathered through the Metropolis algorithm.
+"""
+# system = minFrame (system at minimum)
+N_metropolis = 100000
+step = 0.1
+energies = [minE]
+acceptance = [0,0]
+nPoints = [0]
+
+for i in range(N_metropolis):
+
+    for atom in system.atoms: 
+        randT = np.random.uniform(-step,step,size=3)        # Random steps of (-step,step) lenghts
+        atom.translate(*randT)    
+    
+    system.update()
+    dE = None
+    if not acceptE(dE,beta):
+        acceptance[1] += 1
+        # system = system[-1]
+        continue
+    else:
+        acceptance[0] += 1
+        # save energies and snapshot
+
+
 
 
 
@@ -369,7 +410,7 @@ fig.tight_layout(h_pad=3,w_pad=5)
 
 
 tf = time()
-print(f"\nProcess finished in {tf-to:.2f}s")
+print(f"\nProcess finished in {tf-to:.2f}s\n")
 # plt.show()
 
 
