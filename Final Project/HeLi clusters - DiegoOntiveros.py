@@ -48,28 +48,15 @@ def acceptE(dE,beta):
         else:
             return False
             
-def print_title(text,before=15,after=15,separator="-",head=2,tail=1):
+def print_title(text,before=15,after=15,separator="-",head=2,tail=1, file_name:str=None):
     """Prints text in a title-style."""
     separator = str(separator)
     print("\n"*head,separator*before,text,separator*after,"\n"*tail)
 
-def writeXYZ(atoms:list,file_name:str="MCout.xyz"):
-    """
-    Writes the coords array into a .xyz-style file.
+    if file_name is not None:
+        with open(file_name,"a") as outFile:
+            print("\n"*head,separator*before,text,separator*after,"\n"*(tail-1),file=outFile)
 
-    Parameters
-    ----------
-    `atoms` : List of particle objects.
-    `file_name` : Output file name (.xyz). Defaults to "MCout.xyz"
-    """
-    N = len(atoms)
-    with open(file_name,"w") as outFile: 
-        outFile.write(str(N) + "\n\n")
-        for atom in atoms:
-            label = atom.label
-            x,y,z = atom.coord
-            outFile.write(f"{label:5} {x:>20.15f} {y:>20.15f} {z:>20.15f} \n")
-            
 
 ###################### He-He and He-Li Potentials ############### 
 
@@ -220,14 +207,15 @@ class System():
         """
         self.atoms = atoms
         self.pairs = list(combinations(atoms,2))    # List of pairs of particles objects
-        self.N = len(self.pairs)                    # Number of particles
-        self.coords = self.get_coords()
+        self.N = len(self.atoms)                    # Number of particles
+        self.coords = self.get_coords()             # NOT USED !
 
         # Pairs information
         self.labels = self.get_labels()
         self.distances = self.get_distances()
         self.energies = self.get_energies()
         self.total_energy = self.get_total_energy()
+
 
     def get_coords(self): # ####Remove if not used by distances!
         """Gets the coordinates of all atoms in the system."""
@@ -279,12 +267,28 @@ class System():
         self.distances = self.get_distances()
         self.energies = self.get_energies()
         self.total_energy = self.get_total_energy()
-    
+
+
     def draw(self,ax:plt.Axes):
         """Draws the atoms of the system to the specified axis"""
         for atom in self.atoms:
             atom.draw(ax)
 
+    def writeXYZ(self,file_name:str):
+        """
+        Writes the coords array into a .xyz-style file.
+
+        Parameters
+        ----------
+        `file_name` : Output file name (.xyz). Defaults to "MCout.xyz"
+        """
+        N = self.N
+        with open(file_name,"w") as outFile: 
+            outFile.write(str(N) + "\n\n")
+            for atom in self.atoms:
+                label = atom.label
+                x,y,z = atom.coord
+                outFile.write(f"{label:5} {x:>20.15f} {y:>20.15f} {z:>20.15f} \n")
 
 
 ########################### ----- Main Program ----- #########################      
@@ -300,17 +304,26 @@ ax3 = fig.add_subplot(2, 2, 2, projection='3d')
 # Input parameters (Initial Sampling and Metropolis)
 N_He = 4               # Number of He atoms 
 lim = 8                 # Box limit
-N_sampling = 10000     # Number of sampling iterations
-N_metropolis = 100000   # Number of metropolis iterations 
-step = 0.05             # Size of the translatio step in metropolis
+N_sampling = 100     # Number of sampling iterations
+N_metropolis = 10000   # Number of metropolis iterations 
+step = 0.1              # Size of the translatio step in metropolis
 T = 10.                 # Temperature
-kb = 0.00119872041      # Boltzman constant (in kcal/(mol⋅K))
+file_name = "out.log"   # Output file name
+
+kb = 0.695034800        # Boltzman constant (in cm-1/K)
 beta = 1./(kb*T)        # Beta factor
+# outFile = open(file_name,"w")
 
 print(f"\nSystem: He{N_He}Li+")
 print("Temperature (K): ", T)
 print("Number of initial sampling steps: ", N_sampling)
 print("Number of Metropolis MC steps:    ", N_metropolis)
+
+with open(file_name,"w") as outFile:
+    outFile.write(f"\nSystem: He{N_He}Li+\n")
+    outFile.write(f"Temperature (K): {T}\n")
+    outFile.write(f"Number of initial sampling steps: {N_sampling}\n")
+    outFile.write(f"Number of Metropolis MC steps:    {N_metropolis}\n")
 
 
 # Creating list with the atom objects of the system
@@ -329,7 +342,7 @@ While the Li+ is fixed in the center, snapshots of the He atoms at random places
 are generated and the energy is saved.
 """
 
-print_title("Starting initial sampling")
+print_title("Starting initial sampling",file_name=file_name)
 print("Completed:", end=" ")
 frames:list[System] = [0 for _ in range(N_sampling)]
 energies = np.zeros(N_sampling) 
@@ -354,9 +367,10 @@ for i in range(N_sampling):
 minE = np.min(energies)                 # Mininum energy from sampling pairs
 minEi = np.argmin(energies)             # Minimum energy index
 minFrame = frames[minEi]                # Frame of the minimum energy 
-minFrame.draw(ax1)                      # Drawing initial sample minimum     
-writeXYZ(minFrame.atoms,file_name="sampling.xyz")
-print("\nMinimum Energies from sampling (cm-1): ", minE)
+minFrame.draw(ax1)                      # Drawing initial sample minimum    
+minFrame.writeXYZ(file_name="sampling.xyz") 
+print(f"\nMinimum Energies from sampling (cm-1): {minE:.6f}")
+with open(file_name,"a") as outFile: outFile.write(f"\nMinimum Energies from sampling (cm-1): {minE:.6f}\n")
 
 
 
@@ -374,7 +388,7 @@ energies = [minE]               # List of energies
 system = deepcopy(minFrame)
 frames = [deepcopy(minFrame)]
 
-print_title("Starting Metropolis MC")
+print_title("Starting Metropolis MC",file_name=file_name)
 print("Completed:", end=" ")
 for i in range(N_metropolis):
 
@@ -411,12 +425,18 @@ minFrame.draw(ax3)                  # Drawing minimum configuration
 ax2.plot(nPoints,energies, lw=1)    # Plotting energy evolution
 
 
-writeXYZ(minFrame.atoms,file_name="metropolis.xyz")     # Maybe use a System class method?
+minFrame.writeXYZ(file_name="metropolis.xyz")
+
 print(f"\nAccepted: {acceptance[0]}, Not Accepted: {acceptance[1]}. N steps: {sum(acceptance)}")
 print(f"Acceptance:                              {100*acceptance[0]/N_metropolis:.2f}%")
 print(f"Energy at final iteration (cm-1):    {energies[-1]:.6f}")
 print(f"Minimum energy found (cm-1):         {minE:.6f}")
 
+with open(file_name,"a") as outFile:
+    outFile.write(f"\nAccepted: {acceptance[0]}, Not Accepted: {acceptance[1]}. N steps: {sum(acceptance)}\n")
+    outFile.write(f"Acceptance:                              {100*acceptance[0]/N_metropolis:.2f}%\n")
+    outFile.write(f"Energy at final iteration (cm-1):    {energies[-1]:.6f}\n")
+    outFile.write(f"Minimum energy found (cm-1):         {minE:.6f}\n")
 
 
 
@@ -445,6 +465,7 @@ fig.savefig(f"He{N_He}Li.jpg",dpi=600)
 
 tf = time()
 print(f"\nProcess finished in {tf-to:.2f}s\n")
+with open(file_name,"a") as outFile: outFile.write(f"\nProcess finished in {tf-to:.2f}s\n")
 plt.show()
 
 
