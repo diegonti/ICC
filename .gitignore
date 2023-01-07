@@ -1,9 +1,7 @@
 # Final Project
 *.xyz
 #*.pdf
-/Final Project/*.pdf
-"He-He potential.pdf"
-/Final Project/He-He potential.pdf
+bib/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
