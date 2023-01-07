@@ -7,6 +7,6 @@ List of possible features and updates to the code.
 
 - Optimize: Find a way to optimize the code, specially potential calculations (exp, loops) and get distances/energies functions. Maybe using f2py for the potential functions (numba does not work well).
 
-- System: create .draw(ax) method, remove get_configuration() if not used
+- System: Use System class method to writeXYZ, remove get_configuration() if not used
 
 - .gitignore: uncheck .xyz and .pdf

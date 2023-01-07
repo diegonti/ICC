@@ -14,13 +14,12 @@ For more info, see also the testingMC.ipynb notebook, were different tests were 
 Diego Ontiveros Cruz -- 10/1/2023
 """
 
-import scipy as sp
 import numpy as np
 import matplotlib.pyplot as plt
 
 
 from itertools import combinations
-from copy import copy
+from copy import copy,deepcopy
 from time import time
 to = time()
 
@@ -281,7 +280,10 @@ class System():
         self.energies = self.get_energies()
         self.total_energy = self.get_total_energy()
     
-    # could be a     system.draw(ax) method for atom in self.atoms: atom.draw(ax)
+    def draw(self,ax:plt.Axes):
+        """Draws the atoms of the system to the specified axis"""
+        for atom in self.atoms:
+            atom.draw(ax)
 
 
 
@@ -295,26 +297,28 @@ ax2 = fig.add_subplot(2, 2, (3,4))
 ax3 = fig.add_subplot(2, 2, 2, projection='3d')
 
 
-# Sampling parameters
-N_He = 8                # Number of He atoms 
-N_sampling = 10000     # Number of iterations (minimum 10)
+# Input parameters (Initial Sampling and Metropolis)
+N_He = 4               # Number of He atoms 
 lim = 8                 # Box limit
+N_sampling = 10000     # Number of sampling iterations
+N_metropolis = 100000   # Number of metropolis iterations 
+step = 0.05             # Size of the translatio step in metropolis
 T = 10.                 # Temperature
 kb = 0.00119872041      # Boltzman constant (in kcal/(mol⋅K))
 beta = 1./(kb*T)        # Beta factor
-np.random.seed(333)
+
 print(f"\nSystem: He{N_He}Li+")
+print("Temperature (K): ", T)
 print("Number of initial sampling steps: ", N_sampling)
-print("Temperature: ", T)
+print("Number of Metropolis MC steps:    ", N_metropolis)
+
 
 # Creating list with the atom objects of the system
 atoms = [Li()]
 for i in range(N_He): atoms.append(He(i+1))
 
-# Creating System of atoms pairs
+# Creating System with the atoms
 system = System(atoms)
-
-
 
 
 ######################## ----- Initial MC Sampling ----- #########################  
@@ -327,36 +331,33 @@ are generated and the energy is saved.
 
 print_title("Starting initial sampling")
 print("Completed:", end=" ")
-frames = [[] for _ in range(N_sampling)]
+frames:list[System] = [0 for _ in range(N_sampling)]
 energies = np.zeros(N_sampling) 
-for i in range(N_sampling):                             ########### Use system.atoms ??
+for i in range(N_sampling):
 
+    # Generating random position for the He atoms in the box
     for atom in system.atoms[1:]:
         randT = np.random.uniform(-lim,lim,size=3)
         atom.translate(*randT)
     
-    system.update()
-    energies[i] = system.total_energy
+    system.update()                                 # Updating system parameters
+    frames[i] = deepcopy(system)                    # Saving system snapshot
+    energies[i] = system.total_energy               # Saving total energy
+    for atom in system.atoms[1:]: atom.toOrigin()   # Moving He to origin
 
-    for atom in system.atoms: frames[i].append(copy(atom))          # frames[i].append(copy(system))
-    for atom in system.atoms[1:]: atom.toOrigin()
-
+    # % Completed
     if i%(N_sampling/10) == 0:
         print(f"{int(100*i/N_sampling)}% ",sep=" ",end="",flush=True)
-
-    # print(system.labels)
-    # print(system.distances)
-    # print(system.energies)
-    # print(system.total_energy)
 
 
 # Get minimum Energy and Coordinates from the initial sampling 
 minE = np.min(energies)                 # Mininum energy from sampling pairs
 minEi = np.argmin(energies)             # Minimum energy index
 minFrame = frames[minEi]                # Frame of the minimum energy 
-for atom in minFrame: atom.draw(ax1)    # Drawing initial sample minimum
-writeXYZ(minFrame,file_name="sampling.xyz")
+minFrame.draw(ax1)                      # Drawing initial sample minimum     
+writeXYZ(minFrame.atoms,file_name="sampling.xyz")
 print("\nMinimum Energies from sampling (cm-1): ", minE)
+
 
 
 ######################## ----- Metropolis MC ----- #########################   
@@ -366,34 +367,66 @@ Metropolis Monte Carlo to find the minimum configuration from the initial starti
 found in the sampling. Now the He atoms move a smaller given random step,
 and new configurations are gathered through the Metropolis algorithm.
 """
-# system = minFrame (system at minimum)
-N_metropolis = 100000
-step = 0.1
-energies = [minE]
-acceptance = [0,0]
-nPoints = [0]
 
+nPoints = [0]                   # List of accepted steps
+acceptance = [0,0]              # MC Metropolis acceptance 
+energies = [minE]               # List of energies
+system = deepcopy(minFrame)
+frames = [deepcopy(minFrame)]
+
+print_title("Starting Metropolis MC")
+print("Completed:", end=" ")
 for i in range(N_metropolis):
 
-    for atom in system.atoms: 
-        randT = np.random.uniform(-step,step,size=3)        # Random steps of (-step,step) lenghts
+    # Random steps for the He atoms
+    for atom in system.atoms[1:]: 
+        randT = np.random.uniform(-step,step,size=3)
         atom.translate(*randT)    
     
     system.update()
-    dE = None
-    if not acceptE(dE,beta):
-        acceptance[1] += 1
-        # system = system[-1]
-        continue
-    else:
+    E = system.total_energy
+    dE = E - energies[-1]
+
+    # Acceptance of the MC step
+    if acceptE(dE,beta):
+        # Save energies and snapshot
         acceptance[0] += 1
-        # save energies and snapshot
+        energies.append(E)
+        nPoints.append(i+1)
+        frames.append(deepcopy(system))
+    else:
+        # Turn back to last frame
+        acceptance[1] += 1
+        system = deepcopy(frames[-1])
+
+    # % Completed
+    if i%(N_metropolis/10) == 0:
+        print(f"{int(100*i/N_metropolis)}% ",sep=" ",end="",flush=True)
+
+
+minE = np.min(energies)             # Minimum energy from metropolis MC
+minEi = np.argmin(energies)         # Minimum energy index
+minFrame = frames[minEi]            # Minimum frame for the system
+minFrame.draw(ax3)                  # Drawing minimum configuration
+ax2.plot(nPoints,energies, lw=1)    # Plotting energy evolution
+
+
+writeXYZ(minFrame.atoms,file_name="metropolis.xyz")     # Maybe use a System class method?
+print(f"\nAccepted: {acceptance[0]}, Not Accepted: {acceptance[1]}. N steps: {sum(acceptance)}")
+print(f"Acceptance:                              {100*acceptance[0]/N_metropolis:.2f}%")
+print(f"Energy at final iteration (cm-1):    {energies[-1]:.6f}")
+print(f"Minimum energy found (cm-1):         {minE:.6f}")
 
 
 
 
+# Plot titles and axis labels
+ax1.set_title("Minimum configuration from initial sampling")
+ax3.set_title("Minimum configuration from metropolis simulation")
+ax2.set_title("Energy variation in MonteCarlo Metropolis")
+ax2.set_xlabel("N");ax2.set_ylabel("Energy (cm-1)")
 
-# Plot Settings
+# 3D Plots axis arrows
 tick_step = 4
 for ax in [ax1,ax3]:
     ax.quiver(-lim,0,0, 2*lim,0,0, color='k', lw=1, arrow_length_ratio=0.05)   # x-axis
@@ -404,13 +437,14 @@ for ax in [ax1,ax3]:
     ax.set_xticks(np.arange(-lim, lim+tick_step, tick_step))
     ax.set_yticks(np.arange(-lim, lim+tick_step, tick_step))
     ax.set_zticks(np.arange(-lim, lim+tick_step, tick_step))
-ax1.set_title("Minimum configuration from initial sampling")
-ax3.set_title("Minimum configuration from metropolis simulation")
+
+
 fig.tight_layout(h_pad=3,w_pad=5)
+fig.savefig(f"He{N_He}Li.jpg",dpi=600)
 
 
 tf = time()
 print(f"\nProcess finished in {tf-to:.2f}s\n")
-# plt.show()
+plt.show()
 
 
