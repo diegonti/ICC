@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 
 
 from itertools import combinations
-from copy import copy,deepcopy
+from copy import deepcopy
 from time import time
 to = time()
 
@@ -208,7 +208,6 @@ class System():
         self.atoms = atoms
         self.pairs = list(combinations(atoms,2))    # List of pairs of particles objects
         self.N = len(self.atoms)                    # Number of particles
-        self.coords = self.get_coords()             # NOT USED !
 
         # Pairs information
         self.labels = self.get_labels()
@@ -216,13 +215,6 @@ class System():
         self.energies = self.get_energies()
         self.total_energy = self.get_total_energy()
 
-
-    def get_coords(self): # ####Remove if not used by distances!
-        """Gets the coordinates of all atoms in the system."""
-        self.coords = []
-        for atom in self.atoms:
-            self.coords.append(atom.coord)
-        return np.array(self.coords)
 
     def get_labels(self):
         """Gets the atom labels for each pair. Returns list."""
@@ -240,7 +232,6 @@ class System():
             distance = np.linalg.norm(pair[0].coord - pair[1].coord)
             self.distances.append(distance)
 
-        # self.distances = sp.spatial.distance.pdist(self.coords) # (same pair-whise order)
         return np.array(self.distances)
 
     def get_energies(self):
@@ -262,7 +253,6 @@ class System():
 
     def update(self):
         """Updates all attributes of the System."""
-        self.coords = self.get_coords()
         self.labels = self.get_labels()
         self.distances = self.get_distances()
         self.energies = self.get_energies()
@@ -302,17 +292,16 @@ ax3 = fig.add_subplot(2, 2, 2, projection='3d')
 
 
 # Input parameters (Initial Sampling and Metropolis)
-N_He = 4               # Number of He atoms 
+N_He = 6                # Number of He atoms 
 lim = 8                 # Box limit
-N_sampling = 100     # Number of sampling iterations
-N_metropolis = 10000   # Number of metropolis iterations 
+N_sampling = 50000      # Number of sampling iterations
+N_metropolis = 200000   # Number of metropolis iterations 
 step = 0.1              # Size of the translatio step in metropolis
 T = 10.                 # Temperature
 file_name = "out.log"   # Output file name
 
 kb = 0.695034800        # Boltzman constant (in cm-1/K)
 beta = 1./(kb*T)        # Beta factor
-# outFile = open(file_name,"w")
 
 print(f"\nSystem: He{N_He}Li+")
 print("Temperature (K): ", T)
