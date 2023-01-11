@@ -253,7 +253,6 @@ class System():
 
     def update(self):
         """Updates all attributes of the System."""
-        self.labels = self.get_labels()
         self.distances = self.get_distances()
         self.energies = self.get_energies()
         self.total_energy = self.get_total_energy()
@@ -455,6 +454,6 @@ fig.savefig(f"He{N_He}Li.jpg",dpi=600)
 tf = time()
 print(f"\nProcess finished in {tf-to:.2f}s\n")
 with open(file_name,"a") as outFile: outFile.write(f"\nProcess finished in {tf-to:.2f}s\n")
-plt.show()
+# plt.show()
 
 
