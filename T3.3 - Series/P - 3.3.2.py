@@ -1,5 +1,8 @@
-### Exercise 3.3.2 (Aproximating ex with infinite sum)
-
+"""
+Problem 3.3.2 - Infinite sum.
+Approximating exp(x) with infinite sum.
+Diego Ontiveros
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -25,13 +28,13 @@ def exponential(x):
             break
         n += 1
 
-#Data creation
+# Data creation
 x, fx = [],[]
 for i in np.arange(0,10,0.1):
     x.append(i)
     fx.append(exponential(i))
 
-#Plot Settings
+# Plot Settings
 plt.plot(x,fx)
 plt.xlabel("x");plt.ylabel("exp(x)")
 plt.show()

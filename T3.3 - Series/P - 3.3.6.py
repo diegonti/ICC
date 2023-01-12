@@ -1,5 +1,8 @@
-### Excercise 3.3.6 (Calculating e with continued fraction)
-
+"""
+Problem 3.3.6 - Continued Fraction.
+Approximating exp with continued fraction.
+Diego
+"""
 import numpy as np
 
 def eContinuedFraction(n):

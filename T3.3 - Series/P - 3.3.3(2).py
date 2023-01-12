@@ -1,13 +1,16 @@
-### Exercise 3.3.3
-
+"""
+Problem 3.3.3 (2) - Continued fraction.
+Finding roots of quadratic equation with continued fractions.
+Diego Ontiveros
+"""
 def continuedFraction(a,b,c, eps=None,maxiter=1e3):
     """Returns roots of quadratic equation by continued fraction."""
     
-    if eps == None: #Get macheps if eps not specified
+    if eps == None: # Get macheps if eps not specified
         eps = 1
         while eps+1.0>1.0: eps = eps*0.5
 
-    #Loop for root1
+    # Loop for root1
     i = 0
     root1,root2 = -1,1
     while True:
@@ -22,7 +25,7 @@ def continuedFraction(a,b,c, eps=None,maxiter=1e3):
             break
         i += 1
     
-    #Loop for root2
+    # Loop for root2
     i = 0
     while True:
         root2 = -c/(b+root2)

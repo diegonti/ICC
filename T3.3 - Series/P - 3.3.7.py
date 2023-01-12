@@ -1,5 +1,8 @@
-### Exercise 3.3.7 (erfc(x))
-
+"""
+Problem 3.3.6 - Continued Fraction.
+Approximating error function with continued fraction and infinite sum.
+Diego
+"""
 import numpy as np
 
 def factorial(x):

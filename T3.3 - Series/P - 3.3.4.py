@@ -1,13 +1,17 @@
 ###xercise 3.3.4 (solve with fixed-point method)
+"""
+Problem 3.3.4 - Solving equations.
+Solving equation with the fixed point method and Aitken extrapolation.
+Diego Ontiveros
+"""
 
 def fixedPoint(f,start,eps=None,maxiter=1e5):
     
-
-    if eps == None: #Get macheps if eps not specified
+    if eps == None: # Get macheps if eps not specified
         eps = 1
         while eps+1.0>1.0: eps = eps*0.5
 
-    #Method
+    # Method
     x,i=start,0
     while True:
         
@@ -27,7 +31,7 @@ def fixedPoint(f,start,eps=None,maxiter=1e5):
 
 def aitken(f,start, eps=None, maxiter=1e4):
     
-    if eps == None: #Get macheps if eps not specified
+    if eps == None: # Get macheps if eps not specified
         eps = 1
         while eps+1.0>1.0: eps = eps*0.5
 
@@ -69,6 +73,6 @@ print("\nUsing f(x)...")
 fixedPoint(f, -0.22, eps=1e-6)
 aitken(f,-0.22, eps=1e-6)
 
-#One can see that using the Aitken aproximation leads to a convergence in more cases,
-#being a better case for using in general functions, while the fixed point method only
-#converges sugin f(x) and depending on the starting point.
+# One can see that using the Aitken aproximation leads to a convergence in more cases,
+# being a better case for using in general functions, while the fixed point method only
+# converges sugin f(x) and depending on the starting point.

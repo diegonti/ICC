@@ -1,4 +1,8 @@
-### Exercise 3.3.1 (Aproximating e with infinite sum)
+"""
+Problem 3.3.1 - Infinite sum.
+Approximating exp with infinite sum.
+Diego Ontiveros
+"""
 import numpy as np
 
 def factorial(x):
@@ -10,11 +14,11 @@ def factorial(x):
 def exponential():
     """Calculates number e with its series representation."""
 
-    #Gets the machine epsilon
+    # Gets the machine epsilon
     eps = 1
     while eps+1.0>1.0: eps = eps*0.5
 
-    #Loop of the infinite sum
+    # Loop of the infinite sum
     result, i = 0, 0
     while True:
         step = 1/factorial(i)

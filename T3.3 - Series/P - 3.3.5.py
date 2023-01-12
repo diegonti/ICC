@@ -1,24 +1,16 @@
-### Exercise 3.3.4
-
+"""
+Problem 3.3.5 - Logistic map.
+Discrete-time demographic model with logistic map (chaos).
+Diego Ontiveros
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 
-# def f(x, k): return k*x*(1-x)
 
-# x = np.linspace(0,4)
-
-# for k in np.arange(1,10): 
-#     plt.plot(x,f(x,k), label = f"k = {k}")
-
-# plt.xlabel("x");plt.ylabel("kx(x-1)")
-# plt.legend()
-# plt.show()
-
-
-interval = (2.4, 4)  # start, end
-accuracy = 0.001
-reps = 200  # number of repetitions
-numtoplot = 100 # number of lines to plor
+interval = (2.4, 4)     # start, end
+accuracy = 0.001        # precision
+reps = 200              # number of repetitions
+numtoplot = 100         # number of lines to plor
 lims = np.zeros(reps)
 
 fig, biax = plt.subplots()
