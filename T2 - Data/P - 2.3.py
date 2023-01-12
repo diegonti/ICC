@@ -1,4 +1,8 @@
-###Exercise 2.3
+"""
+Problem 2.3 - Plot precision
+Testing the np.linspace precision.
+Diego Ontiveros
+"""
 import numpy as np
 import matplotlib.pyplot as plt 
 
@@ -9,7 +13,7 @@ points1 = 1000
 x1 = np.linspace(-range,range, num=points1)  # x array with higher number of points
 x2 = np.linspace(-range,range)               # default is 50 points
 
-#Plotting Settings
+# Plotting Settings
 fig,plots = plt.subplots(2,1)
 
 plots[0].plot(x1,f(x1), color ="teal",label = fr"f($x_1$), points = {points1}")
@@ -22,7 +26,7 @@ plt.xlabel("x")
 
 plt.show()
 
-#When plotting, the program cannot show the infiniy of rational numbers for the function
-#it uses a sample of a certain number of points that "do the job" and the function appears smooth.
-#But we have to be carefoul with this fact because as in the example before, using the default number of points with large ranges,
-#may not be enough in some cases and important information of the function may be missing.
+# When plotting, the program cannot show the infiniy of rational numbers for the function
+# it uses a sample of a certain number of points that "do the job" and the function appears smooth.
+# But we have to be carefoul with this fact because as in the example before, using the default number of points with large ranges,
+# may not be enough in some cases and important information of the function may be missing.

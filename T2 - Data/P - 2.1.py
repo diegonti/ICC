@@ -1,4 +1,8 @@
-###Exercise 2.1
+"""
+Problem 2.1 - Numerical data types
+Testing the arithmetic between different data types.
+Diego Ontiveros
+"""
 
 def case1(b,c):
     """Case 1: a,b,c=int"""
@@ -18,17 +22,17 @@ def case3(b,c):
     a = float(b/c)
     print(f"Case 3: When a = float and b,c = int, a = {a}")
 
-#Main Program
+# Main Program
 b,c = 1,2
-case1(b,c) #Same as b//c
-case2(b,c) #Same as b/c
+case1(b,c) # Same as b//c
+case2(b,c) # Same as b/c
 case3(b,c)
 
-#Se puede ver como a diferencia de Fortran, en Python, aunque dos numeros sean enteros
-#al dividirse entre ellos, el resultado pasa a ser racional (a no ser que sea forzado con la función int()).
-#Es importante tener eso en cuenta ya que si no, puede haber truncamientos donde no queremos, o al reves.
-#En este sentido, Python es más "humano" ya que lo hace más como alguien con una calculadora, en cambio 
-#Fortran, al declarar el tipo de variable, es mas fiel a esa declaración, por lo tanto int/int da int, no real.
+# You can see how unlike Fortran, in Python, even if two numbers are integers
+# when dividing between them, the result becomes rational (unless it is forced with the int() function).
+# It is important to keep that in mind because otherwise, there may be truncations where we don't want, or the other way around.
+# In this sense, Python is more "human" since it works more like someone with a calculator, 
+# on the other hand, in Fortran, when declaring the variable type, is more faithful to that declaration, so int/int gives int, not real.
 
-#En ambos lenguajes, poner un punto despues del numero hace que sea float (o real), dandole más precisión y evitando 
-#errores de precisión.
+# In both languages, putting a dot after the number makes it float (or real), giving it more precision and avoiding precision errors.
+
