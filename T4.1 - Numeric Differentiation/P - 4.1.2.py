@@ -1,5 +1,5 @@
 """
-Problem 4.4.2 - Differentiation Types.
+Problem 4.1.2 - Differentiation Types.
 Backward, Forward and Central Numerical differentiation of a function.
 Diego Ontiveros
 """
