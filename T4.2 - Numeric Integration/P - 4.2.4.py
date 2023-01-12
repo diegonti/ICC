@@ -1,9 +1,12 @@
-### Exercise 4.2.4 (Gauss-Legendre quadrate)
-
+"""
+Problem 4.2.4 - Integration Types: Gauss-Legandre.
+Gauss-Legandre and Simpson Numerical integration of a function.
+Diego Ontiveros
+"""
 import numpy as np
 import matplotlib.pyplot as plt 
 
-#Dictionary with the Gauss-Legandre tabulated parameters for wi and ti
+# Dictionary with the Gauss-Legandre tabulated parameters for wi and ti
 parameters = {
     "n1":[[0],[2]],
     "n2": [[np.sqrt(1/3),-np.sqrt(1/3)],[1,1]],
@@ -40,14 +43,14 @@ def simpson13(x,f):
     return (h/3)*(points[0] + 2*sum(points[2:-2:2]) + 4*sum(points[1:-1:2]) + points[-1])
 
 
-##Main Program
-def f(x): return np.sin(x)  #Function to integrate
-def F(x): return -np.cos(x) #Analytic integral
+#################### Main Program #####################3
+def f(x): return np.sin(x)  # Function to integrate
+def F(x): return -np.cos(x) # Analytic integral
 
-a,b = 0,np.pi/2             #Integration interval
-I = F(b)-F(a)               #0.999 ~ 1
+a,b = 0,np.pi/2             # Integration interval
+I = F(b)-F(a)               # 0.999 ~ 1
 
-#Calculates the absolute error as function of grid points (n)
+# Calculates the absolute error as function of grid points (n)
 EabsGL = np.array([])
 EabsS = np.array([])
 nPoints = np.arange(1,10+1,1)
@@ -55,10 +58,10 @@ for n in nPoints:
     h = (b-a)/(n)
     x = np.arange(a,b+h,h)
     
-    iGL = gaussLegendre(n,f)    #Gauss-Legandre integral
-    iS = simpson13(x,f)         #Simpson1/3 Integral
-    errGL = abs(I- iGL)         #Gauss-Legandre error
-    errS = abs(I - iS)          #Simpson1/3 error
+    iGL = gaussLegendre(n,f)    # Gauss-Legandre integral
+    iS = simpson13(x,f)         # Simpson1/3 Integral
+    errGL = abs(I- iGL)         # Gauss-Legandre error
+    errS = abs(I - iS)          # Simpson1/3 error
 
     EabsGL = np.append(EabsGL,errGL)
     EabsS = np.append(EabsS,errS)
@@ -67,7 +70,7 @@ for n in nPoints:
     print(f"n = {n}:  Simpson 1/3    = {iS}    Eabs = {errS}")
 
 
-#Plot Settings
+# Plot Settings
 plt.semilogy(nPoints, EabsGL,"x-", label="Gauss-Legandre")
 plt.semilogy(nPoints, EabsS,"x-", label="Simpson 1/3")
 plt.xlabel("n");plt.ylabel("Eabs")

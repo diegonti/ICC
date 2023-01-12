@@ -1,4 +1,8 @@
-### Exercise 4.2.1 and 4.2.2
+"""
+Problem 4.2.2 - Integration Types.
+Rectangular, Trapezoid, Simpson and Richardson Numerical integration of a function.
+Diego Ontiveros
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -18,34 +22,34 @@ def simpson23(x,f):
     points = f(x)
     return (3*h/8)*(sum(points[0:-3:3]) + 3*sum(points[1:-2:3]) + 3*sum(points[2:-1:3]) + sum(points[3::3]))
 
-#Richardson Extrapolation
+# Richardson Extrapolation
 def richardson(integral,coef1,coef2,x1,x2):
     return coef1*integral(x1,f) - coef2*integral(x2,f)
 
-#Function and Integral
+# Function and Integral
 def f(x): return x + np.sin(x)
 def F(x): return x**2/2 - np.cos(x)
 
-#Range of Integration
+# Range of Integration
 a,b = 0,1
 I = F(b)-F(a)
 
-#Calculates the absolute error of the richardon extrapolation for each method
+# Calculates the absolute error of the richardon extrapolation for each method
 rangN = (3,200)
 gpoints = np.arange(*rangN)
 errors = [[] for _ in range(3)]
 points = [[] for _ in range(3)]
 for n in gpoints:
     h = (b-a)/(n)
-    x1 = np.arange(a,b+h,h)     #gridpoints with n points
-    x2 = np.arange(a,b+h,2*h)   #gridpoints with n/2 points
+    x1 = np.arange(a,b+h,h)     # gridpoints with n points
+    x2 = np.arange(a,b+h,2*h)   # gridpoints with n/2 points
     
     EabsT = abs(I - (richardson(trapezoid,4/3,1/3,x1,x2)))
     EabsS13 = abs(I - (richardson(simpson13,16/15,1/15,x1,x2)))
     EabsS23 = abs(I - (richardson(simpson23,16/15,1/15,x1,x2)))
     err = [EabsT,EabsS13,EabsS23]
 
-    #Filtering major fluctuations due to the cut of the interval at a intermediate points
+    # Filtering major fluctuations due to the cut of the interval at a intermediate points
     for i,e in enumerate(err):
         if i == 0 and e>(1/n**2): continue
         if i == 1 and e>(1/n**4): continue
@@ -53,7 +57,7 @@ for n in gpoints:
         errors[i].append(e)
         points[i].append(n)
 
-#Plot Settings
+# Plot Settings
 labels = ["Trapezoid","Simpson13", "Simpson23"]
 for point,error,label in zip(points,errors,labels):
     plt.loglog(point, error, label = label)
