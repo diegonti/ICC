@@ -7,6 +7,5 @@ List of possible features and updates to the code.
 
 - Optimize: Find a way to optimize the code, specially potential calculations (exp, loops) and get distances/energies functions. Maybe using f2py for the potential functions (numba does not work well), or using multiprocessing.
 
-- Automatize task for a set of N_He 
 
 - .gitignore: uncheck .xyz and .pdf
