@@ -3,6 +3,7 @@
 #*.pdf
 bib/
 runs/
+runs2/
 *.pptx
 
 # Byte-compiled / optimized / DLL files
