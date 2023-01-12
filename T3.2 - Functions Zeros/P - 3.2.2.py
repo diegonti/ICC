@@ -1,9 +1,12 @@
-### Exercise 3.2.2
-##Finding root of f(x) = cos(x) - x*sin(x) = 0
+"""
+Problem 3.2.2 - Finding root of cos(x)-x*sin(x)
+Finding root of a function with Newron-Raphson method.
+Diego Ontiveros
+"""
 
 import numpy as np
 
-#Newton's Method
+# Newton's Method
 def newtonRaphson(f,df,xmin, digits):
     """Newton-Raphson method for finding roots.\n\nTakes a function f, the range to find the root, and the digit accuracy."""
     print("Searching root with Newton-Raphson Method...")
@@ -20,10 +23,10 @@ def newtonRaphson(f,df,xmin, digits):
         xmin = xmax
         i += 1
  
-##Main Program
-#Since we are able too look at a graphical representation of this function,
-#we can see that there are more than one roots, simmetryc to the y axis. So we'll begin with two different starting points, -1 and 1.
-#Notice that the function has a maxima in 0, so starting from 0 or close to it may lead to non-convergence.
+#####################  Main Program  #########################
+# Since we are able too look at a graphical representation of this function,
+# we can see that there are more than one roots, simmetryc to the y axis. So we'll begin with two different starting points, -1 and 1.
+# Notice that the function has a maxima in 0, so starting from 0 or close to it may lead to non-convergence.
 
 def f(x): return np.cos(x) - x*np.sin(x) 
 def df(x): return -2*np.sin(x)-x*np.cos(x)

@@ -1,5 +1,7 @@
-### Extra Exercise (Eigenstates)
-
+"""
+Problem Extra - Eigenstates of atoms in harmonic trap.
+Diego Ontiveros
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy as sp

@@ -1,5 +1,8 @@
-### Exercise 3.2.1
-##Finding root of f(x) = cos(x) - x = 0
+"""
+Problem 3.2.1 - Finding root of cos(x)-x
+Finding root of a function with different methods
+Diego Ontiveros
+"""
 
 import numpy as np
 
