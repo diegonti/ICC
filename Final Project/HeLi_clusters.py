@@ -495,7 +495,7 @@ if __name__ == "__main__":
     # Input parameters (Initial Sampling and Metropolis)
     N_He = 6                # Number of He atoms 
     lim = 8                 # Box limit
-    N_sampling = 10000      # Number of sampling iterations
+    N_sampling = 50000      # Number of sampling iterations
     N_metropolis = 200000   # Number of metropolis iterations 
     step = 0.1              # Size of the translatio step in metropolis
     T = 10.                 # Temperature
