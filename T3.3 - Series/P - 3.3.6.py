@@ -1,7 +1,7 @@
 """
 Problem 3.3.6 - Continued Fraction.
 Approximating exp with continued fraction.
-Diego
+Diego Ontiveros
 """
 import numpy as np
 

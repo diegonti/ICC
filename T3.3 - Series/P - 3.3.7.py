@@ -1,7 +1,7 @@
 """
 Problem 3.3.6 - Continued Fraction.
 Approximating error function with continued fraction and infinite sum.
-Diego
+Diego Ontiveros
 """
 import numpy as np
 

@@ -2,7 +2,7 @@
 """
 Problem Extra - Decimal to fraction.
 Returns the simplified fraction version of a decimal.
-Diego
+Diego Ontiveros
 """
 
 def findFactors(x:int):
