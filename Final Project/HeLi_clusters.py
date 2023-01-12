@@ -316,7 +316,7 @@ class MonteCarlo():
         # Path and file management
         if path is None: self.path = "./"
         else: self.path = path
-        if file_name is None: self.file_name = self.path + f"out{N_He}.log"
+        if file_name is None: self.file_name = self.path + f"out{self.N_He}.log"
         else: self.file_name = self.path + file_name
 
 
@@ -484,7 +484,7 @@ class MonteCarlo():
         self.metropolis()
         
         self.fig.tight_layout(h_pad=3,w_pad=5)
-        self.fig.savefig(f"He{self.N_He}Li.jpg",dpi=600)
+        self.fig.savefig(self.path + f"He{self.N_He}Li.jpg",dpi=600)
 
         tf = time()
         print(f"\nProcess finished in {tf-to:.2f}s\n")
