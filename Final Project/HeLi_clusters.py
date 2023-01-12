@@ -285,7 +285,8 @@ class MonteCarlo():
         T:float=10,
         step:float=0.1,
         box_lim: float = 8,
-        file_name:str="out.log") -> None:
+        path:str=None,
+        file_name:str=None) -> None:
         """
         Main MonteCarlo class for conducting MC simulations.
 
@@ -297,7 +298,8 @@ class MonteCarlo():
         `T` : Optional. Temperature. By default 10.
         `step` : Optional. Size of the translation step. By default 0.1.
         `box_lim` : Optional. Box size. By default 8.
-        `file_name` : Optional. Output file name. By default "out.log".
+        `path` : Optional. Path were files are dumped. By default ".".
+        `file_name` : Optional. Output file name. By default out{N_he}.log.
         """
         
         self.system = system
@@ -306,11 +308,16 @@ class MonteCarlo():
         self.T = T
         self.step = step
         self.lim = box_lim
-        self.file_name = file_name
         kb = 0.695034800                # Boltzman constant (in cm-1/K)
         self.beta = 1./(kb*T)           # Beta factor
         self.N_He = self.system.N - 1   # Number of He atoms
         self.minFrame = None
+
+        # Path and file management
+        if path is None: self.path = "./"
+        else: self.path = path
+        if file_name is None: self.file_name = self.path + f"out{N_He}.log"
+        else: self.file_name = self.path + file_name
 
 
         # Printing and saving Input parameters
@@ -319,7 +326,7 @@ class MonteCarlo():
         print("Number of initial sampling steps: ", N_sampling)
         print("Number of Metropolis MC steps:    ", N_metropolis)
 
-        with open(file_name,"w") as outFile:
+        with open(self.file_name,"w") as outFile:
             outFile.write(f"\nSystem: He{self.N_He}Li+\n")
             outFile.write(f"Temperature (K): {T}\n")
             outFile.write(f"Number of initial sampling steps: {N_sampling}\n")
@@ -363,7 +370,7 @@ class MonteCarlo():
         self.minFrame.draw(self.ax1)            # Drawing initial sample minimum    
         
         # Printing and saving results
-        self.minFrame.writeXYZ(file_name=f"sampling{self.N_He}.xyz") 
+        self.minFrame.writeXYZ(file_name=self.path + f"sampling{self.N_He}.xyz") 
         print(f"\nMinimum Energies from sampling (cm-1): {minE:.6f}")
         with open(self.file_name,"a") as outFile: outFile.write(f"\nMinimum Energies from sampling (cm-1): {minE:.6f}\n")
 
@@ -418,7 +425,7 @@ class MonteCarlo():
         self.ax2.plot(nPoints,energies, lw=1)   # Plotting energy evolution
 
         # Printing and saving results
-        self.minFrame.writeXYZ(file_name=f"metropolis{self.N_He}.xyz")
+        self.minFrame.writeXYZ(file_name=self.path + f"metropolis{self.N_He}.xyz")
 
         print(f"\nAccepted: {acceptance[0]}, Not Accepted: {acceptance[1]}. N steps: {sum(acceptance)}")
         print(f"Acceptance:                              {100*acceptance[0]/self.N_metropolis:.2f}%")
@@ -499,7 +506,7 @@ if __name__ == "__main__":
     N_metropolis = 200000   # Number of metropolis iterations 
     step = 0.1              # Size of the translatio step in metropolis
     T = 10.                 # Temperature
-    file_name = "out6.log"  # Output file name
+    file_name = "test.log"  # Output file name
 
     # Creating list with the atom objects of the system
     atoms = [Li()]
@@ -513,7 +520,7 @@ if __name__ == "__main__":
         system,
         N_sampling,N_metropolis,
         T,step,lim,
-        file_name
+        file_name = file_name
     )
 
     mc.run()
