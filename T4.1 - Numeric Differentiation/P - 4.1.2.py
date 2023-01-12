@@ -1,5 +1,8 @@
-### Exercici 4.1.2
-
+"""
+Problem 4.4.2 - Differentiation Types.
+Backward, Forward and Central Numerical differentiation of a function.
+Diego Ontiveros
+"""
 #Getting machine epsilon
 macheps = 1
 while macheps+1.0>1.0: macheps = macheps*0.5
