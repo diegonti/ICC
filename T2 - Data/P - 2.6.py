@@ -1,5 +1,5 @@
 """
-Problem 2.5 - Gaussian Distribution
+Problem 2.6 - Gaussian Distribution
 Visualizing random numbers from Normal Distribution.
 Diego Ontiveros
 """
