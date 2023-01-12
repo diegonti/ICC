@@ -1,5 +1,4 @@
 from HeLi_clusters import He,Li,System,MonteCarlo
-from HeLi_clusters import print_title
 
 from time import time
 import os
@@ -7,8 +6,8 @@ to = time()
 
 # Input parameters (Initial Sampling and Metropolis)
 lim = 8                 # Box limit
-N_sampling = 5000      # Number of sampling iterations
-N_metropolis = 2000   # Number of metropolis iterations 
+N_sampling = 50000      # Number of sampling iterations
+N_metropolis = 200000   # Number of metropolis iterations 
 step = 0.1              # Size of the translatio step in metropolis
 T = 10.                 # Temperature
 
@@ -16,9 +15,8 @@ dir_runs = "runs2"
 try: os.mkdir(dir_runs)
 except FileExistsError: pass
 
-for N_He in range(11,13):
+for N_He in range(11,20+1):
     
-    # file_name = f"out{N_He}.log"  # Output file name
     dir_name = f"./{dir_runs}/He{N_He}Li/"
 
     try: os.mkdir(dir_name)
