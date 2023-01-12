@@ -1,5 +1,5 @@
 """
-Problem 3 - EDPs
+Problem 7.3 - EDPs
 Time propagation of Schrodinger Equation.
 Diego Ontiveros
 """
@@ -15,8 +15,6 @@ def tridiagonal(dim,k_diagonal,k_below,k_above):
     c = np.ones((1, dim-1))[0]*k_above
     m = np.diag(a, 0) + np.diag(b, -1) + np.diag(c, 1)
     return m
-
-
 
 def V(x,y):
     D0 = 33714
@@ -52,8 +50,6 @@ s2 = 0.04
 p = 5.5
 mu = 2/3 * 1836
 w = 7.535e14 * hbar/Eh
-
-
 
 
 # Space Conditions

@@ -1,6 +1,6 @@
 """
-Problem 1.3 - EDPs
-2nd Fick law 1D FTCS. Dropplet with PBC.
+Problem 7.1.3 - 2nd Fick law 1D FTCS.
+Solving 2nd Fick law with explicit method. Dropplet with PBC.
 Diego Ontiveros
 """
 import numpy as np

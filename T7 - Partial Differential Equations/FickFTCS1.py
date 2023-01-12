@@ -1,6 +1,6 @@
 """
-Problem 1.1 - EDPs
-2nd Fick law 1D FTCS. Constant flow to fill a segment.
+Problem 7.1.1 - 2nd Fick law 1D FTCS.
+Solving 2nd Fick law with explicit method. Constant flow to fill a segment.
 Diego Ontiveros
 """
 import numpy as np

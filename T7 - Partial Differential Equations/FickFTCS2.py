@@ -1,6 +1,6 @@
 """
-Problem 1.2 - EDPs
-2nd Fick law 1D FTCS. Concentration step with.
+Problem 7.1.2 - 2nd Fick law 1D FTCS.
+Solving 2nd Fick law with explicit method. Concentration step with.
 Diego Ontiveros
 """
 

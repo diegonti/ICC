@@ -1,8 +1,9 @@
 """
-Problem 2 - EDPs
-Diffusion-Reaction System.
+Problem 7.2 - Diffusion-Reaction System
+Solving Diffusion-Reaction System with implicit method.
 Diego Ontiveros
 """
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation, PillowWriter

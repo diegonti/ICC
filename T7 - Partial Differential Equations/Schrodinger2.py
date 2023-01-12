@@ -1,5 +1,5 @@
 """
-Problem 3 - EDPs
+Problem 7.3 - EDPs
 Time propagation of Schrodinger Equation.
 Diego Ontiveros
 """
