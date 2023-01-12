@@ -1,7 +1,7 @@
 """
 Problem 3.4.1 - Interpolation.
 Interpolating function from datapoints.
-Diego
+Diego Ontiveros
 """
 import numpy as np
 import matplotlib.pyplot as plt

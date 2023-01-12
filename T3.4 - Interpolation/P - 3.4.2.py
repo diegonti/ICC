@@ -1,7 +1,7 @@
 """
-Problem 3.4.1 - Interpolation.
+Problem 3.4.2 - Interpolation.
 Interpolating function from datapoints with Lagrange method.
-Diego
+Diego Ontiveros
 """
 import numpy as np
 import matplotlib.pyplot as plt
