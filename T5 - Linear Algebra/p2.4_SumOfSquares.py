@@ -1,5 +1,5 @@
 """
-Problem 2.4 - Optimization. Sum of Squares
+Problem 5.3.4 - Optimization. Sum of Squares
 Fitting function points using Gauss-Newton to minimize residuals.
 Diego Ontiveros
 """
@@ -90,7 +90,7 @@ def GaussNewton(t,y,X,tol=1e-6,max_iter=100):
 def y_prime(y, X): return -X[0]*y/(X[1]+y)
 
 
-############ MAIN PROGRAM ################
+############## MAIN PROGRAM ################
 
 # Initial data
 t = np.array([0, 23.6, 49.1, 74.5, 80.0, 100.0, 125.5, 147.3])

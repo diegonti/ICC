@@ -1,5 +1,5 @@
 """
-Problem 1 - Algebra Optimization
+Problem 5.2.1 - Algebra Optimization
 Using Conjugate Gradient method to minimize a function.
 Diego Ontiveros
 """
@@ -127,5 +127,3 @@ plt.plot(f_points,"ro--")
 plt.xlabel("Iteration");plt.ylabel("Function")
 plt.show()
 
-
-# The 

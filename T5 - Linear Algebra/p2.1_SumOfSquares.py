@@ -1,5 +1,5 @@
 """
-Problem 2.1 - Optimization. Sum of Squares
+Problem 5.3.1 - Optimization. Sum of Squares
 Fitting function using Gauss-Newton to minimize the sum of squares of residuals.
 Diego Ontiveros
 """

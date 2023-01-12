@@ -1,5 +1,8 @@
-### Lanczos diagonalization - Diego Ontiveros
-
+"""
+Problem 5.1.3 - Diagonalization.
+Lanczos method to diagonalize matrix.
+Diego Ontiveros
+"""
 import numpy as np
 import numpy.linalg as la
 

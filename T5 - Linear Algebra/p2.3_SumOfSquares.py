@@ -1,5 +1,5 @@
 """
-Problem 2.3 - Optimization. Sum of Squares
+Problem 5.3.3 - Optimization. Sum of Squares
 Optimizing parameters x1 and x2 by minimizing given f.
 Diego Ontiveros
 """

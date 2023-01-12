@@ -1,5 +1,8 @@
-### Jacobi diagonalization - Diego Ontiveros
-
+"""
+Problem 5.1.1 - Diagonalization.
+Jacobi method to diagonalize matrix.
+Diego Ontiveros
+"""
 import numpy as np
 
 def maxElem(a):

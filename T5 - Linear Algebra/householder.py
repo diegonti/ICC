@@ -1,5 +1,8 @@
-### Householder method - Diego Ontiveros
-
+"""
+Problem 5.1.2 - Diagonalization.
+HouseHolder method to diagonalize matrix.
+Diego Ontiveros
+"""
 import numpy as np
 
 def householder(A):
