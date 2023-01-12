@@ -1,5 +1,8 @@
-### Exercise 6.3 (Tiro parabólico)
-
+"""
+Problem 6.3 - Parabolic throw.
+Solving ODE (motion equations) with combined Euler method.
+Diego Ontiveros
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 

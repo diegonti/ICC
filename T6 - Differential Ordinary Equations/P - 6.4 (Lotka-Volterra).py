@@ -1,5 +1,8 @@
-### Exercise 6.4 (Poblaciones animales)
-
+"""
+Problem 6.4 - Animal Poblation.
+Solving ODE (Lotka-Volterra) with RungeKutta4.
+Diego Ontiveros
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 

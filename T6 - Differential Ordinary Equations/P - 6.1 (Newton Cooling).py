@@ -1,5 +1,8 @@
-### Exercise 6.1 (Enfriamiento Newton)
-
+"""
+Problem 6.1 - Newton Cooling.
+Solving ODE (Newton's cooling equations) with combined Euler method.
+Diego Ontiveros
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 

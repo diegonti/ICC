@@ -1,11 +1,14 @@
-### Exercise 6.5 - IRC
-
+"""
+Problem 6.5 - IRC.
+Computing the IRC of the Müller-Brown (MB) surface using Runge-Kutta4 and starting from the Transition State (TS).
+Diego Ontiveros
+"""
 """ 
 First some modules are imported. One of the most importan ones is `SymPy` 
 which will allow us to anallitically calculate the gradient and hessian of the MB energy function. 
 SymPy works with "symbols" which are equivalent to the variablabes and paramaters used in mathematics. 
 This is a version using a unique Python script, but its much interactive and visual to see the procedure and 
-expressions in the attached notebook (XXX.ipynb).
+expressions in the attached notebook (P-6.5.ipynb).
 """
 
 # Importing modules

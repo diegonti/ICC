@@ -1,5 +1,8 @@
-### Exercise 6.2 (Reacciones autocatalíticas)
-
+"""
+Problem 6.2 - Autocatalitic reaction.
+Solving ODE (reaction equations) with combined Euler method.
+Diego Ontiveros
+"""
 import numpy as np
 import matplotlib.pyplot as plt
 
