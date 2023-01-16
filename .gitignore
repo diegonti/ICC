@@ -1,8 +1,8 @@
 # Final Project
-*.xyz
+#*.xyz
 #*.pdf
 bib/
-runs/
+poster/
 runs2/
 *.pptx
 
