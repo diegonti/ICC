@@ -1,0 +1,20 @@
+
+System: He15Li+
+Temperature (K): 10.0
+Number of initial sampling steps: 50000
+Number of Metropolis MC steps:    200000
+
+
+ --------------- Starting initial sampling --------------- 
+
+Minimum Energies from sampling (cm-1): -2560.890073
+
+
+ --------------- Starting Metropolis MC --------------- 
+
+Accepted: 34502, Not Accepted: 165498. N steps: 200000
+Acceptance:                              17.25%
+Energy at final iteration (cm-1):    -5106.900699
+Minimum energy found (cm-1):         -5186.587448
+
+Process finished in 559.06s
