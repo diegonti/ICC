@@ -1,6 +1,6 @@
 # Final Project: $He_NLi^+$ Clusters with Monte Carlo Simulations
 
-In this project are found the Python scripts developed to carry out MonteCarlo simulations on a system of $He_NLi+$ clusters. 
+In this project are found the Python scripts developed to carry out MonteCarlo simulations on a system of $He_NLi^+$ clusters. 
 
 `HeLi_clusters.py` is the main module that contains the classes and functions to perform the simulation.
 
